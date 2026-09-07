@@ -24,7 +24,8 @@ jobs:
       - name: Install dependencies
         run: |
           rm -rf node_modules
-          npm install --include=optional
+          npm install --include=optional --force
+          npm rebuild @tailwindcss/oxide
 
       - name: Build Static App
         run: npx vite build
