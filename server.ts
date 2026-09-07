@@ -221,7 +221,7 @@ async function fetchLiveSteamDeals(): Promise<GameDeal[]> {
 // API: Get deals with filters, sorting, region, and language
 app.get("/api/deals", async (req, res) => {
   try {
-    const forceRefresh = req.query.refresh === "1";
+    const forceRefresh = req.query.refresh === "1" || req.query.refresh === "true";
     const now = Date.now();
 
     if (!dealsCache || forceRefresh || now - dealsCache.timestamp > CACHE_TTL_MS) {

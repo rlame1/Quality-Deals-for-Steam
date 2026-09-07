@@ -88,11 +88,12 @@ export default function App() {
     );
 
     // 1. If running full-stack (and NOT on static hosting like GitHub Pages), try /api/deals
-    if (!forceRefresh && !isStaticHost) {
+    if (!isStaticHost) {
       try {
         const queryParams = new URLSearchParams({
           region: region.code,
           lang,
+          ...(forceRefresh ? { refresh: '1', _t: String(Date.now()) } : {})
         });
         const res = await fetch(`/api/deals?${queryParams.toString()}`);
         if (res.ok) {
@@ -111,36 +112,37 @@ export default function App() {
       }
     }
 
-    // 2. Static host (GitHub Pages): Load pre-compiled deals.json (instant load of 1,700+ deals)
-    if (!forceRefresh) {
-      try {
-        const baseUrl = ((import.meta as any).env?.BASE_URL as string) || './';
-        const dealsUrl = `${baseUrl.endsWith('/') ? baseUrl : baseUrl + '/'}deals.json`;
-        let jsonRes = await fetch(dealsUrl).catch(() => null);
-        if (!jsonRes || !jsonRes.ok) {
-          jsonRes = await fetch('./deals.json').catch(() => null);
-        }
-        if (!jsonRes || !jsonRes.ok) {
-          jsonRes = await fetch('deals.json').catch(() => null);
-        }
+    // 2. Static host (GitHub Pages) or backend fallback: Load pre-compiled deals.json (4,900+ deals)
+    try {
+      const baseUrl = ((import.meta as any).env?.BASE_URL as string) || './';
+      const cacheBuster = forceRefresh ? `?_t=${Date.now()}` : '';
+      const dealsUrl = `${baseUrl.endsWith('/') ? baseUrl : baseUrl + '/'}deals.json${cacheBuster}`;
+      const fetchOpts: RequestInit = forceRefresh ? { cache: 'reload' } : {};
 
-        if (jsonRes && jsonRes.ok) {
-          const staticData = await jsonRes.json();
-          if (Array.isArray(staticData) && staticData.length > 50) {
-            setDeals(staticData);
-            setIsLoading(false);
-            return;
-          }
-        }
-      } catch (err) {
-        console.warn('Could not load bundled deals.json:', err);
+      let jsonRes = await fetch(dealsUrl, fetchOpts).catch(() => null);
+      if (!jsonRes || !jsonRes.ok) {
+        jsonRes = await fetch(`./deals.json${cacheBuster}`, fetchOpts).catch(() => null);
       }
+      if (!jsonRes || !jsonRes.ok) {
+        jsonRes = await fetch(`deals.json${cacheBuster}`, fetchOpts).catch(() => null);
+      }
+
+      if (jsonRes && jsonRes.ok) {
+        const staticData = await jsonRes.json();
+        if (Array.isArray(staticData) && staticData.length > 50) {
+          setDeals(staticData);
+          setIsLoading(false);
+          return;
+        }
+      }
+    } catch (err) {
+      console.warn('Could not load bundled deals.json:', err);
     }
 
-    // 3. If forceRefresh requested or deals.json unavailable: fetch live multi-page from CheapShark
+    // 3. Fallback: only if deals.json AND /api/deals are both unavailable: fetch live multi-page from CheapShark
     try {
-      console.log('Fetching live multi-page deals from CheapShark API...');
-      const liveDeals = await fetchLiveDealsFromCheapShark(25);
+      console.log('Fetching live multi-page deals from CheapShark API as fallback...');
+      const liveDeals = await fetchLiveDealsFromCheapShark(45);
       if (liveDeals && liveDeals.length > 0) {
         setDeals(liveDeals);
         setIsLoading(false);
