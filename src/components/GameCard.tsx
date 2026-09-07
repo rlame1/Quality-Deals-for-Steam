@@ -1,6 +1,6 @@
 import React from 'react';
 import { ExternalLink, Bookmark, Users, ThumbsUp, Flame, TrendingDown } from 'lucide-react';
-import { GameDeal, RegionInfo } from '../types';
+import { GameDeal, RegionInfo, STEAM_FALLBACK_IMAGE } from '../types';
 import { Translations } from '../utils/i18n';
 import { formatRegionalPrice } from '../utils/regions';
 
@@ -26,13 +26,19 @@ export const GameCard: React.FC<GameCardProps> = ({
       {/* Banner Image with overlay badges */}
       <div className="relative aspect-[16/9] w-full overflow-hidden bg-[#0b0e14]">
         <img
-          src={deal.banner}
+          src={deal.banner || deal.thumb || STEAM_FALLBACK_IMAGE}
           alt={deal.title}
           className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
           loading="lazy"
           referrerPolicy="no-referrer"
           onError={(e) => {
-            (e.target as HTMLImageElement).src = deal.thumb;
+            const target = e.currentTarget;
+            target.onerror = null;
+            if (deal.thumb && target.src !== deal.thumb) {
+              target.src = deal.thumb;
+            } else {
+              target.src = STEAM_FALLBACK_IMAGE;
+            }
           }}
         />
 

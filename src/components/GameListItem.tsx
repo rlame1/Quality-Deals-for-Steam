@@ -1,6 +1,6 @@
 import React from 'react';
 import { ExternalLink, Bookmark, Users, Flame, TrendingDown } from 'lucide-react';
-import { GameDeal, RegionInfo } from '../types';
+import { GameDeal, RegionInfo, STEAM_FALLBACK_IMAGE } from '../types';
 import { Translations } from '../utils/i18n';
 import { formatRegionalPrice } from '../utils/regions';
 
@@ -78,13 +78,19 @@ export const GameListItem: React.FC<GameListItemProps> = ({
         {/* Thumbnail Image */}
         <div className="relative w-16 sm:w-20 h-9 sm:h-10 rounded overflow-hidden shrink-0 bg-slate-900 border border-slate-700/60 group-hover:border-cyan-400/50 transition-colors">
           <img
-            src={deal.thumb}
+            src={deal.thumb || deal.banner || STEAM_FALLBACK_IMAGE}
             alt={deal.title}
             className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
             loading="lazy"
             referrerPolicy="no-referrer"
             onError={(e) => {
-              (e.target as HTMLImageElement).src = deal.banner;
+              const target = e.currentTarget;
+              target.onerror = null;
+              if (deal.banner && target.src !== deal.banner) {
+                target.src = deal.banner;
+              } else {
+                target.src = STEAM_FALLBACK_IMAGE;
+              }
             }}
           />
         </div>

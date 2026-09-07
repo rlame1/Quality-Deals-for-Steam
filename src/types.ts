@@ -42,6 +42,8 @@ export interface GameDeal {
   diffFromHistoricalLow: number;
 }
 
+export const STEAM_FALLBACK_IMAGE = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='460' height='215' viewBox='0 0 460 215'%3E%3Crect width='460' height='215' fill='%23111827'/%3E%3Cpath d='M230 75a18 18 0 100 36 18 18 0 000-36zm-30 50h60v6h-60z' fill='%23374151'/%3E%3Ctext x='50%25' y='65%25' dominant-baseline='middle' text-anchor='middle' fill='%236b7280' font-family='sans-serif' font-size='13' font-weight='600'%3ESteam Game%3C/text%3E%3C/svg%3E";
+
 export type SortOption = 'discount' | 'metacritic' | 'steamRating' | 'priceAsc' | 'priceDesc' | 'dealRating';
 
 export type ViewMode = 'list' | 'grid';

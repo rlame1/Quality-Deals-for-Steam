@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { X, ExternalLink, Bookmark, Users, Award, ThumbsUp, Calendar, Flame, TrendingDown, Clock, Info } from 'lucide-react';
-import { GameDeal, RegionInfo } from '../types';
+import { GameDeal, RegionInfo, STEAM_FALLBACK_IMAGE } from '../types';
 import { Translations } from '../utils/i18n';
 import { formatRegionalPrice } from '../utils/regions';
 
@@ -24,10 +24,24 @@ export const GameDetailModal: React.FC<GameDetailModalProps> = ({
   useEffect(() => {
     if (!deal) return;
 
+    // Check if running in static hosting (GitHub Pages) where backend /api routes don't exist
+    const isStaticHost = typeof window !== 'undefined' && (
+      window.location.hostname.endsWith('github.io') ||
+      window.location.hostname.includes('pages.dev') ||
+      window.location.protocol === 'file:'
+    );
+
+    if (isStaticHost) {
+      return;
+    }
+
     let isCancelled = false;
 
     fetch(`/api/game/${deal.id}?region=${currentRegion.code}&lang=${currentLang}`)
-      .then((r) => r.json())
+      .then((r) => {
+        if (!r.ok) throw new Error(`Status ${r.status}`);
+        return r.json();
+      })
       .then((data) => {
         if (!isCancelled) {
           setExtraDetails(data);
@@ -40,7 +54,7 @@ export const GameDetailModal: React.FC<GameDetailModalProps> = ({
     return () => {
       isCancelled = true;
     };
-  }, [deal?.id, currentRegion.code]);
+  }, [deal?.id, currentRegion.code, currentLang]);
 
   if (!deal) return null;
 
@@ -58,11 +72,17 @@ export const GameDetailModal: React.FC<GameDetailModalProps> = ({
         {/* Header Image with close button */}
         <div className="relative aspect-[16/8] sm:aspect-[21/9] w-full bg-[#0b0e14] overflow-hidden">
           <img
-            src={extraDetails?.headerImage || deal.banner}
+            src={extraDetails?.headerImage || deal.banner || deal.thumb || STEAM_FALLBACK_IMAGE}
             alt={deal.title}
             className="w-full h-full object-cover"
             onError={(e) => {
-              (e.target as HTMLImageElement).src = deal.thumb;
+              const target = e.currentTarget;
+              target.onerror = null;
+              if (deal.thumb && target.src !== deal.thumb) {
+                target.src = deal.thumb;
+              } else {
+                target.src = STEAM_FALLBACK_IMAGE;
+              }
             }}
           />
           <div className="absolute inset-0 bg-gradient-to-t from-[#161b22] via-transparent to-black/40" />

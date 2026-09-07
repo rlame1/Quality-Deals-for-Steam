@@ -81,8 +81,14 @@ export default function App() {
     setIsLoading(true);
     setError(null);
 
-    // 1. If running full-stack, try /api/deals first
-    if (!forceRefresh) {
+    const isStaticHost = typeof window !== 'undefined' && (
+      window.location.hostname.endsWith('github.io') ||
+      window.location.hostname.includes('pages.dev') ||
+      window.location.protocol === 'file:'
+    );
+
+    // 1. If running full-stack (and NOT on static hosting like GitHub Pages), try /api/deals
+    if (!forceRefresh && !isStaticHost) {
       try {
         const queryParams = new URLSearchParams({
           region: region.code,
@@ -101,17 +107,24 @@ export default function App() {
           }
         }
       } catch {
-        // Backend not available (e.g. GitHub Pages static host), proceed to static dataset
+        // Backend not available, proceed to static dataset
       }
     }
 
     // 2. Static host (GitHub Pages): Load pre-compiled deals.json (instant load of 1,700+ deals)
     if (!forceRefresh) {
       try {
-        const baseUrl = ((import.meta as any).env?.BASE_URL as string) || '/';
+        const baseUrl = ((import.meta as any).env?.BASE_URL as string) || './';
         const dealsUrl = `${baseUrl.endsWith('/') ? baseUrl : baseUrl + '/'}deals.json`;
-        const jsonRes = await fetch(dealsUrl);
-        if (jsonRes.ok) {
+        let jsonRes = await fetch(dealsUrl).catch(() => null);
+        if (!jsonRes || !jsonRes.ok) {
+          jsonRes = await fetch('./deals.json').catch(() => null);
+        }
+        if (!jsonRes || !jsonRes.ok) {
+          jsonRes = await fetch('deals.json').catch(() => null);
+        }
+
+        if (jsonRes && jsonRes.ok) {
           const staticData = await jsonRes.json();
           if (Array.isArray(staticData) && staticData.length > 50) {
             setDeals(staticData);
