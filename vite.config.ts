@@ -5,7 +5,7 @@ import {defineConfig} from 'vite';
 
 export default defineConfig(() => {
   return {
-    base: './',
+    base: '/Quality-Deals-for-Steam/',
     plugins: [react(), tailwindcss()],
     resolve: {
       alias: {
