@@ -67,7 +67,7 @@ export const FilterBar: React.FC<FilterBarProps> = ({
     onFilterChange({
       search: '',
       maxPrice: 0,
-      minDiscount: 0,
+      minDiscount: 30,
       minMetacritic: 0,
       minSteamRating: 0,
       minReleaseYear: 0,
@@ -80,7 +80,7 @@ export const FilterBar: React.FC<FilterBarProps> = ({
   const isFiltered = 
     Boolean(filters.search) || 
     filters.maxPrice > 0 || 
-    filters.minDiscount > 0 || 
+    filters.minDiscount > 30 || 
     filters.minMetacritic > 0 || 
     filters.minSteamRating > 0 || 
     filters.minReleaseYear > 0 ||
@@ -332,15 +332,15 @@ export const FilterBar: React.FC<FilterBarProps> = ({
             <div className="flex justify-between text-xs">
               <label className="text-slate-400 font-medium">{t.minDiscountLabel}</label>
               <span className="font-bold text-emerald-400 font-mono">
-                {filters.minDiscount === 0 ? t.noLimit : `≥ ${filters.minDiscount}%`}
+                {`≥ ${Math.max(30, filters.minDiscount)}%`}
               </span>
             </div>
             <input
               type="range"
-              min="0"
+              min="30"
               max="90"
               step="5"
-              value={filters.minDiscount}
+              value={Math.max(30, filters.minDiscount)}
               onChange={(e) => onFilterChange({ ...filters, minDiscount: parseInt(e.target.value, 10) })}
               className="w-full accent-cyan-500 cursor-pointer"
             />

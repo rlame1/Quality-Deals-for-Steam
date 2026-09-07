@@ -3,6 +3,10 @@ name: Deploy to GitHub Pages
 on:
   push:
     branches: [ main, master ]
+  schedule:
+    # Run twice daily: 06:00 UTC and 19:00 UTC (right after Steam's daily 10:00 AM PT sale reset)
+    - cron: '0 6,19 * * *'
+  workflow_dispatch:
 
 permissions:
   contents: read

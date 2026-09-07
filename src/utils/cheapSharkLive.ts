@@ -55,7 +55,7 @@ export async function fetchLiveDealsFromCheapShark(pageCount = 25): Promise<Game
     const known = KNOWN_GAMES[appId];
     const finalMeta = meta > 0 ? meta : (known ? 85 : 0);
     if (steamPct < 70 && finalMeta < 70) continue;
-    if (discount < 10) continue; // Only items with actual discount
+    if (discount < 30) continue; // Minimum -30% discount requirement
 
     seen.add(appId);
 

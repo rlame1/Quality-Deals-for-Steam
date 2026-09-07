@@ -51,6 +51,21 @@ function translateSteamRating(text: string, lang: 'en' | 'fi'): string {
 
 // Fetch live Steam deals from SteamSpy & CheapShark APIs
 async function fetchLiveSteamDeals(): Promise<GameDeal[]> {
+  // 0. Prefer loading comprehensive pre-compiled deals dataset
+  try {
+    const dealsJsonPath = path.resolve(process.cwd(), "public/deals.json");
+    if (fs.existsSync(dealsJsonPath)) {
+      const raw = fs.readFileSync(dealsJsonPath, "utf-8");
+      const parsed = JSON.parse(raw);
+      if (Array.isArray(parsed) && parsed.length >= 1000) {
+        console.log(`Loaded ${parsed.length} deals from public/deals.json for server cache.`);
+        return parsed;
+      }
+    }
+  } catch (e) {
+    console.warn("Could not read public/deals.json in server:", e);
+  }
+
   const headers = {
     "User-Agent": "SteamFinderPro/1.0 (steamfinder@steamdeals.io)"
   };
@@ -59,8 +74,8 @@ async function fetchLiveSteamDeals(): Promise<GameDeal[]> {
   const deals: GameDeal[] = [];
 
   try {
-    // 1. Fetch comprehensive live on-sale games from SteamSpy (15 pages = 15,000 top Steam games)
-    const pages = Array.from({ length: 15 }, (_, i) => i);
+    // 1. Fetch live on-sale games from SteamSpy (up to 50 pages)
+    const pages = Array.from({ length: 50 }, (_, i) => i);
     const steamSpyResults = await Promise.all(
       pages.map(p =>
         fetch(`https://steamspy.com/api.php?request=all&page=${p}`)
@@ -78,7 +93,7 @@ async function fetchLiveSteamDeals(): Promise<GameDeal[]> {
         if (!appId || appId === "0" || seen.has(appId)) continue;
 
         const discount = parseInt(item.discount, 10) || 0;
-        if (discount < 10) continue; // Must be on sale (at least 10% discount)
+        if (discount < 30) continue; // Must be on sale with at least 30% discount
 
         const pos = item.positive || 0;
         const neg = item.negative || 0;
