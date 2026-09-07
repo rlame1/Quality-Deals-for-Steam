@@ -22,10 +22,13 @@ jobs:
           node-version: 18
 
       - name: Install dependencies
-        run: npm install --force
+        run: npm install --include=optional --force
 
-      - name: Build
-        run: npm run build
+      - name: Build Static App
+        run: npx vite build
+
+      - name: Add 404.html for SPA routing on GitHub Pages
+        run: cp dist/index.html dist/404.html
 
       - name: Setup Pages
         uses: actions/configure-pages@v4
