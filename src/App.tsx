@@ -7,6 +7,7 @@ import { GameDetailModal } from './components/GameDetailModal';
 import { Pagination } from './components/Pagination';
 import { GameDeal, FilterState, SortOption, ViewMode, Language, RegionInfo, RegionCode } from './types';
 import { FALLBACK_DEALS } from './data/fallbackDeals';
+import { fetchLiveDealsFromCheapShark } from './utils/cheapSharkLive';
 import { TRANSLATIONS } from './utils/i18n';
 import { detectUserRegion, SUPPORTED_REGIONS, formatRegionalPrice } from './utils/regions';
 import { Sparkles, Filter, MapPin, Flame, Globe, RefreshCw } from 'lucide-react';
@@ -75,82 +76,74 @@ export default function App() {
     } catch {}
   };
 
-  // Load deals from backend API or live CheapShark API (for GitHub Pages static hosting)
+  // Load deals from backend API, bundled static JSON (GitHub Pages), or live multi-page CheapShark API
   const loadDeals = async (forceRefresh = false) => {
     setIsLoading(true);
     setError(null);
-    try {
-      const queryParams = new URLSearchParams({
-        region: region.code,
-        lang,
-        ...(forceRefresh ? { refresh: '1' } : {})
-      });
-      const res = await fetch(`/api/deals?${queryParams.toString()}`);
-      if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
-      
-      const contentType = res.headers.get("content-type");
-      if (contentType && contentType.includes("text/html")) {
-        throw new Error("Static hosting detected");
-      }
 
-      const data = await res.json();
-      if (data.deals && Array.isArray(data.deals) && data.deals.length > 0) {
-        setDeals(data.deals);
+    // 1. If running full-stack, try /api/deals first
+    if (!forceRefresh) {
+      try {
+        const queryParams = new URLSearchParams({
+          region: region.code,
+          lang,
+        });
+        const res = await fetch(`/api/deals?${queryParams.toString()}`);
+        if (res.ok) {
+          const contentType = res.headers.get("content-type");
+          if (contentType && !contentType.includes("text/html")) {
+            const data = await res.json();
+            if (data.deals && Array.isArray(data.deals) && data.deals.length > 50) {
+              setDeals(data.deals);
+              setIsLoading(false);
+              return;
+            }
+          }
+        }
+      } catch {
+        // Backend not available (e.g. GitHub Pages static host), proceed to static dataset
+      }
+    }
+
+    // 2. Static host (GitHub Pages): Load pre-compiled deals.json (instant load of 1,700+ deals)
+    if (!forceRefresh) {
+      try {
+        const baseUrl = ((import.meta as any).env?.BASE_URL as string) || '/';
+        const dealsUrl = `${baseUrl.endsWith('/') ? baseUrl : baseUrl + '/'}deals.json`;
+        const jsonRes = await fetch(dealsUrl);
+        if (jsonRes.ok) {
+          const staticData = await jsonRes.json();
+          if (Array.isArray(staticData) && staticData.length > 50) {
+            setDeals(staticData);
+            setIsLoading(false);
+            return;
+          }
+        }
+      } catch (err) {
+        console.warn('Could not load bundled deals.json:', err);
+      }
+    }
+
+    // 3. If forceRefresh requested or deals.json unavailable: fetch live multi-page from CheapShark
+    try {
+      console.log('Fetching live multi-page deals from CheapShark API...');
+      const liveDeals = await fetchLiveDealsFromCheapShark(25);
+      if (liveDeals && liveDeals.length > 0) {
+        setDeals(liveDeals);
+        setIsLoading(false);
         return;
       }
-      throw new Error("Empty backend deals");
-    } catch (err: any) {
-      console.warn('Static host mode detected, fetching live Steam deals from CheapShark API:', err);
-      try {
-        const csRes = await fetch('https://www.cheapshark.com/api/1.0/deals?storeID=1&pageSize=60&sortBy=Savings');
-        if (!csRes.ok) throw new Error('CheapShark fetch failed');
-        const csData = await csRes.json();
-        if (Array.isArray(csData) && csData.length > 0) {
-          const liveDeals: GameDeal[] = csData.map((item: any) => {
-            const sale = parseFloat(item.salePrice) || 0;
-            const normal = parseFloat(item.normalPrice) || sale;
-            const discount = Math.round(parseFloat(item.savings) || 0);
-            const meta = parseInt(item.metacriticScore, 10) || 0;
-            const steamPct = parseInt(item.steamRatingPercent, 10) || 75;
-            const appId = item.steamAppID || '0';
-            const releaseYear = item.releaseDate && item.releaseDate > 0 ? new Date(item.releaseDate * 1000).getFullYear() : 2023;
-
-            return {
-              id: item.dealID || item.gameID || Math.random().toString(),
-              title: item.title,
-              salePrice: sale,
-              normalPrice: normal,
-              discountPercent: discount,
-              steamRatingPercent: steamPct,
-              steamRatingText: item.steamRatingText || (lang === 'fi' ? 'Myönteinen' : 'Positive'),
-              steamRatingCount: 1000,
-              metacriticScore: meta,
-              thumb: item.thumb || `https://cdn.akamai.steamstatic.com/steam/apps/${appId}/header.jpg`,
-              banner: item.thumb || `https://cdn.akamai.steamstatic.com/steam/apps/${appId}/header.jpg`,
-              steamUrl: appId && appId !== '0' ? `https://store.steampowered.com/app/${appId}` : `https://www.cheapshark.com/redirect?dealID=${item.dealID}`,
-              genres: ['Action', 'RPG', 'Adventure'],
-              isCoop: false,
-              isMultiplayer: false,
-              historicalLow: sale,
-              historicalLowDate: '2026',
-              isHistoricalLow: discount >= 50,
-              diffFromHistoricalLow: 0,
-              dealRating: parseFloat(item.dealRating) || 8.0,
-              releaseYear
-            };
-          });
-          setDeals(liveDeals);
-          return;
-        }
-      } catch (csErr) {
-        console.warn('CheapShark API also failed:', csErr);
-      }
-
-      setDeals([]);
-      setError(t.apiErrorDesc);
-    } finally {
-      setIsLoading(false);
+    } catch (csErr) {
+      console.warn('CheapShark multi-page fetch error:', csErr);
     }
+
+    // 4. Ultimate fallback to curated deals if network is offline
+    if (FALLBACK_DEALS && FALLBACK_DEALS.length > 0) {
+      setDeals(FALLBACK_DEALS);
+    } else {
+      setError(t.apiErrorDesc);
+    }
+    setIsLoading(false);
   };
 
   useEffect(() => {

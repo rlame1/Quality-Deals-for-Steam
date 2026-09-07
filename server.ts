@@ -1,5 +1,6 @@
 import express from "express";
 import path from "path";
+import fs from "fs";
 import { createServer as createViteServer } from "vite";
 import { KNOWN_GAMES, KNOWN_RELEASE_YEARS, inferGenres, checkIsCoop } from "./src/data/gameMetadata.ts";
 import { FALLBACK_DEALS } from "./src/data/fallbackDeals.ts";
@@ -168,10 +169,36 @@ async function fetchLiveSteamDeals(): Promise<GameDeal[]> {
       }
     }
 
+    if (deals.length < 100) {
+      try {
+        const dealsJsonPath = path.resolve(process.cwd(), "public/deals.json");
+        if (fs.existsSync(dealsJsonPath)) {
+          const raw = fs.readFileSync(dealsJsonPath, "utf-8");
+          const parsed = JSON.parse(raw);
+          if (Array.isArray(parsed) && parsed.length > 50) {
+            console.log(`Loaded ${parsed.length} deals from public/deals.json for server cache.`);
+            return parsed;
+          }
+        }
+      } catch (e) {
+        console.warn("Could not read public/deals.json in server:", e);
+      }
+    }
+
     console.log(`Fetched ${deals.length} qualified Steam deals into cache.`);
     return deals;
   } catch (err) {
     console.error("Error fetching live deals from SteamSpy:", err);
+    try {
+      const dealsJsonPath = path.resolve(process.cwd(), "public/deals.json");
+      if (fs.existsSync(dealsJsonPath)) {
+        const raw = fs.readFileSync(dealsJsonPath, "utf-8");
+        const parsed = JSON.parse(raw);
+        if (Array.isArray(parsed) && parsed.length > 50) {
+          return parsed;
+        }
+      }
+    } catch {}
     return FALLBACK_DEALS;
   }
 }
