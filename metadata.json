@@ -1,0 +1,6 @@
+{
+  "name": "Quality Deals for Steam",
+  "description": "Quality Deals for Steam: Only lists games with a Metascore of at least 70% or Steam rating of 7.0 (70%) or higher. Compare regional prices, historical lows, and co-op features.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
