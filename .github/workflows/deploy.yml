@@ -22,7 +22,9 @@ jobs:
           node-version: 18
 
       - name: Install dependencies
-        run: npm install --include=optional --force
+        run: |
+          rm -rf node_modules
+          npm install --include=optional
 
       - name: Build Static App
         run: npx vite build
