@@ -117,6 +117,9 @@ export interface Translations {
   paginationShowing: string;
   paginationPerPage: string;
   paginationAll: string;
+  apiErrorTitle: string;
+  apiErrorDesc: string;
+  refreshPage: string;
   genres: Record<string, string>;
   steamRatings: Record<string, string>;
 }
@@ -239,6 +242,9 @@ export const TRANSLATIONS: Record<Language, Translations> = {
     paginationShowing: 'Showing {start}–{end} of {total} results',
     paginationPerPage: 'Results per page:',
     paginationAll: 'All',
+    apiErrorTitle: 'API Connection Failed',
+    apiErrorDesc: 'API connection could not be established. Please check your network connection and refresh the page.',
+    refreshPage: 'Refresh Page',
     genres: {
       'Kaikki': 'All',
       'All': 'All',
@@ -424,6 +430,9 @@ export const TRANSLATIONS: Record<Language, Translations> = {
     paginationShowing: 'Näytetään {start}–{end} / {total} tulosta',
     paginationPerPage: 'Tuloksia sivulla:',
     paginationAll: 'Kaikki',
+    apiErrorTitle: 'API-yhteyttä ei saatu',
+    apiErrorDesc: 'API-yhteyttä ei saatu muodostettua. Tarkista verkkoyhteys ja päivitä sivu.',
+    refreshPage: 'Päivitä sivu',
     genres: {
       'Kaikki': 'Kaikki',
       'All': 'Kaikki',

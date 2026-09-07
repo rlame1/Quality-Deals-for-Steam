@@ -9,7 +9,7 @@ import { GameDeal, FilterState, SortOption, ViewMode, Language, RegionInfo, Regi
 import { FALLBACK_DEALS } from './data/fallbackDeals';
 import { TRANSLATIONS } from './utils/i18n';
 import { detectUserRegion, SUPPORTED_REGIONS, formatRegionalPrice } from './utils/regions';
-import { Sparkles, Filter, MapPin, Flame, Globe } from 'lucide-react';
+import { Sparkles, Filter, MapPin, Flame, Globe, RefreshCw } from 'lucide-react';
 
 const LANG_STORAGE_KEY = 'steam_deal_finder_lang_v2';
 const REGION_STORAGE_KEY = 'steam_deal_finder_region_v2';
@@ -75,7 +75,7 @@ export default function App() {
     } catch {}
   };
 
-  // Load deals from backend API with region and language
+  // Load deals from backend API or live CheapShark API (for GitHub Pages static hosting)
   const loadDeals = async (forceRefresh = false) => {
     setIsLoading(true);
     setError(null);
@@ -87,16 +87,67 @@ export default function App() {
       });
       const res = await fetch(`/api/deals?${queryParams.toString()}`);
       if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
+      
+      const contentType = res.headers.get("content-type");
+      if (contentType && contentType.includes("text/html")) {
+        throw new Error("Static hosting detected");
+      }
+
       const data = await res.json();
       if (data.deals && Array.isArray(data.deals) && data.deals.length > 0) {
         setDeals(data.deals);
-      } else {
-        setDeals(FALLBACK_DEALS);
+        return;
       }
+      throw new Error("Empty backend deals");
     } catch (err: any) {
-      console.warn('Could not load live deals from /api/deals, using verified deals fallback:', err);
-      setDeals(FALLBACK_DEALS);
-      setError(lang === 'fi' ? 'Käytetään offline-tallennettuja Steam-alennuksia.' : 'Using cached verified Steam deals.');
+      console.warn('Static host mode detected, fetching live Steam deals from CheapShark API:', err);
+      try {
+        const csRes = await fetch('https://www.cheapshark.com/api/1.0/deals?storeID=1&pageSize=60&sortBy=Savings');
+        if (!csRes.ok) throw new Error('CheapShark fetch failed');
+        const csData = await csRes.json();
+        if (Array.isArray(csData) && csData.length > 0) {
+          const liveDeals: GameDeal[] = csData.map((item: any) => {
+            const sale = parseFloat(item.salePrice) || 0;
+            const normal = parseFloat(item.normalPrice) || sale;
+            const discount = Math.round(parseFloat(item.savings) || 0);
+            const meta = parseInt(item.metacriticScore, 10) || 0;
+            const steamPct = parseInt(item.steamRatingPercent, 10) || 75;
+            const appId = item.steamAppID || '0';
+            const releaseYear = item.releaseDate && item.releaseDate > 0 ? new Date(item.releaseDate * 1000).getFullYear() : 2023;
+
+            return {
+              id: item.dealID || item.gameID || Math.random().toString(),
+              title: item.title,
+              salePrice: sale,
+              normalPrice: normal,
+              discountPercent: discount,
+              steamRatingPercent: steamPct,
+              steamRatingText: item.steamRatingText || (lang === 'fi' ? 'Myönteinen' : 'Positive'),
+              steamRatingCount: 1000,
+              metacriticScore: meta,
+              thumb: item.thumb || `https://cdn.akamai.steamstatic.com/steam/apps/${appId}/header.jpg`,
+              banner: item.thumb || `https://cdn.akamai.steamstatic.com/steam/apps/${appId}/header.jpg`,
+              steamUrl: appId && appId !== '0' ? `https://store.steampowered.com/app/${appId}` : `https://www.cheapshark.com/redirect?dealID=${item.dealID}`,
+              genres: ['Action', 'RPG', 'Adventure'],
+              isCoop: false,
+              isMultiplayer: false,
+              historicalLow: sale,
+              historicalLowDate: '2026',
+              isHistoricalLow: discount >= 50,
+              diffFromHistoricalLow: 0,
+              dealRating: parseFloat(item.dealRating) || 8.0,
+              releaseYear
+            };
+          });
+          setDeals(liveDeals);
+          return;
+        }
+      } catch (csErr) {
+        console.warn('CheapShark API also failed:', csErr);
+      }
+
+      setDeals([]);
+      setError(t.apiErrorDesc);
     } finally {
       setIsLoading(false);
     }
@@ -306,8 +357,27 @@ export default function App() {
           currentRegion={region}
         />
 
-        {/* Loading State */}
-        {isLoading && deals.length === 0 ? (
+        {/* Error / API Connection State */}
+        {error ? (
+          <div className="py-16 text-center bg-rose-950/20 border border-rose-500/30 rounded-xl p-8 space-y-4 shadow-sm">
+            <div className="w-14 h-14 rounded-xl bg-rose-950/40 border border-rose-500/40 flex items-center justify-center text-rose-400 mx-auto">
+              <Globe className="w-7 h-7 animate-pulse" />
+            </div>
+            <div>
+              <h3 className="font-bold text-white text-lg">{t.apiErrorTitle}</h3>
+              <p className="text-xs sm:text-sm text-slate-300 mt-1 max-w-md mx-auto">
+                {error}
+              </p>
+            </div>
+            <button
+              onClick={() => loadDeals(true)}
+              className="px-6 py-2.5 rounded-md bg-cyan-600 hover:bg-cyan-500 text-white font-bold text-xs uppercase tracking-wider transition-colors cursor-pointer shadow-sm flex items-center gap-2 mx-auto"
+            >
+              <RefreshCw className="w-4 h-4" />
+              <span>{t.refreshPage}</span>
+            </button>
+          </div>
+        ) : isLoading && deals.length === 0 ? (
           <div className="py-20 flex flex-col items-center justify-center text-center space-y-4">
             <div className="w-12 h-12 rounded-full border-4 border-cyan-600/30 border-t-cyan-500 animate-spin" />
             <div>
