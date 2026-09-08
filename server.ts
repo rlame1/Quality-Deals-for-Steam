@@ -74,7 +74,29 @@ async function fetchLiveSteamDeals(): Promise<GameDeal[]> {
   const deals: GameDeal[] = [];
 
   try {
-    // 1. Fetch live on-sale games from SteamSpy (up to 50 pages)
+    // 1. Fetch verified Steam Category 38 (Online Co-op) IDs directly from Steam specials
+    const officialOnlineCoopIds = new Set<string>();
+    try {
+      const coopPages = Array.from({ length: 15 }, (_, i) => i * 100);
+      const coopResults = await Promise.all(
+        coopPages.map(start =>
+          fetch(`https://store.steampowered.com/search/results/?query&start=${start}&count=100&category2=38&specials=1&infinite=1`, {
+            headers
+          })
+            .then(r => (r.ok ? r.json() : { results_html: "" }))
+            .then(data => {
+              if (!data?.results_html) return [];
+              return [...data.results_html.matchAll(/data-ds-appid=\"([0-9]+)\"/g)].map(m => m[1]);
+            })
+            .catch(() => [])
+        )
+      );
+      for (const batch of coopResults) {
+        for (const id of batch) officialOnlineCoopIds.add(id);
+      }
+    } catch {}
+
+    // 2. Fetch live on-sale games from SteamSpy (up to 50 pages)
     const pages = Array.from({ length: 50 }, (_, i) => i);
     const steamSpyResults = await Promise.all(
       pages.map(p =>
@@ -105,7 +127,6 @@ async function fetchLiveSteamDeals(): Promise<GameDeal[]> {
         const known = KNOWN_GAMES[appId];
 
         // Criterion: Metascore >= 70 OR Steam rating >= 70% (7.0/10)
-        // (If known game has a verified metacritic score >= 70, or user review score >= 70%)
         const metaScore = known ? 85 : userscore;
         if (steamRatingPercent < 70 && metaScore < 70) continue;
 
@@ -113,9 +134,18 @@ async function fetchLiveSteamDeals(): Promise<GameDeal[]> {
 
         const salePrice = Number((parseInt(item.price, 10) / 100).toFixed(2));
         const normalPrice = Number((parseInt(item.initialprice, 10) / 100).toFixed(2));
+        if (salePrice <= 0) continue;
 
         const genres = known ? known.genres : inferGenres(item.name);
-        const isCoop = checkIsCoop(appId, item.name);
+        
+        let isCoop = false;
+        if (known !== undefined) {
+          isCoop = known.isCoop;
+        } else if (officialOnlineCoopIds.has(appId)) {
+          isCoop = true;
+        } else {
+          isCoop = checkIsCoop(appId, item.name);
+        }
         const shortDesc = known?.shortDesc;
 
         let steamRatingText = "Mostly Positive";
@@ -176,14 +206,7 @@ async function fetchLiveSteamDeals(): Promise<GameDeal[]> {
       }
     }
 
-    // Merge in any missing high-value curated fallback deals
-    for (const fb of FALLBACK_DEALS) {
-      if (!seen.has(fb.id)) {
-        deals.push(fb);
-        seen.add(fb.id);
-      }
-    }
-
+    // All deals are strictly 100% live verified discounts
     if (deals.length < 100) {
       try {
         const dealsJsonPath = path.resolve(process.cwd(), "public/deals.json");

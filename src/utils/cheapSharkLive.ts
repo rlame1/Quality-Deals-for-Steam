@@ -1,6 +1,5 @@
 import { GameDeal } from '../types';
 import { KNOWN_GAMES, KNOWN_RELEASE_YEARS, inferGenres, checkIsCoop } from '../data/gameMetadata';
-import { FALLBACK_DEALS } from '../data/fallbackDeals';
 
 /**
  * Fetches multiple pages of live Steam deals directly from CheapShark API.
@@ -119,14 +118,6 @@ export async function fetchLiveDealsFromCheapShark(pageCount = 25): Promise<Game
       historicalLowDate: isHistoricalLow ? '2026' : undefined,
       diffFromHistoricalLow: Math.max(0, Number((sale - historicalLow).toFixed(2))),
     });
-  }
-
-  // Merge top curated fallback deals if not already present
-  for (const fb of FALLBACK_DEALS) {
-    if (!seen.has(fb.id)) {
-      deals.push(fb);
-      seen.add(fb.id);
-    }
   }
 
   return deals;

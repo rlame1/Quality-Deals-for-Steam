@@ -9,34 +9,34 @@ export interface KnownGameMeta {
 
 export const KNOWN_GAMES: Record<string, KnownGameMeta> = {
   // Classic & Co-op hits
-  "550": { genres: ["Toiminta", "Ammunta", "Kauhu"], isCoop: true, shortDesc: "Klassinen 4 pelaajan zombiselviytymispeli yhteistyö- ja PvP-tiloilla.", shortDescEn: "Classic 4-player co-op zombie survival FPS with versus multiplayer modes." }, // Left 4 Dead 2
-  "620": { genres: ["Pulmapelit", "Seikkailu", "Toiminta"], isCoop: true, shortDesc: "Nerokas fysiikkapohjainen pulmapeli erillisellä kahden pelaajan yhteistyökampanjalla.", shortDescEn: "Ingenious physics-based puzzle adventure with a dedicated 2-player co-op campaign." }, // Portal 2
-  "105600": { genres: ["Toiminta", "Seikkailu", "Roolipelit", "Hiekkalaatikko"], isCoop: true, shortDesc: "2D-hiekkalaatikkoseikkailu, jossa kaivetaan, taistellaan ja rakennetaan yhdessä.", shortDescEn: "2D sandbox adventure game where you dig, fight, explore, and build together." }, // Terraria
-  "413150": { genres: ["Roolipelit", "Simulaatio", "Indie"], isCoop: true, shortDesc: "Rentouttava maanviljely- ja elämäsimulaattori jopa neljälle pelaajalle verkossa.", shortDescEn: "Relaxing farming and country-life simulator for up to 4 players online." }, // Stardew Valley
-  "548430": { genres: ["Toiminta", "Ammunta", "Avaruus"], isCoop: true, shortDesc: "1-4 hengen kaivos- ja räiskintäseikkailu proseduraalisesti generoiduissa luolastoissa.", shortDescEn: "1-4 player co-op mining and shooter adventure in procedurally generated caves." }, // Deep Rock Galactic
-  "219990": { genres: ["Roolipelit", "Toiminta", "Hack and Slash"], isCoop: true, shortDesc: "Synkkä apokalyptinen toimintaroolipeli monipuolisella hahmonkehityksellä ja verkkoyhteistyöllä.", shortDescEn: "Dark apocalyptic action RPG featuring complex character development and online co-op." }, // Grim Dawn
-  "289070": { genres: ["Strategia", "Vuoropohjainen"], isCoop: true, shortDesc: "Vuoropohjainen sivilisaationrakennusstrategia moninpelitilalla.", shortDescEn: "Turn-based civilization builder 4X strategy with multiplayer support." }, // Civ VI
-  "3900": { genres: ["Strategia", "Vuoropohjainen"], isCoop: true, shortDesc: "Legendaarinen vuoropohjainen strategiaklassikko.", shortDescEn: "Legendary turn-based strategy classic." }, // Civ IV
-  "435150": { genres: ["Roolipelit", "Strategia", "Vuoropohjainen"], isCoop: true, shortDesc: "Kriitikoiden ylistämä vuoropohjainen taktinen roolipeli syvällä co-op-tuella.", shortDescEn: "Critically acclaimed tactical turn-based RPG with deep 4-player co-op." }, // Divinity Original Sin 2
-  "1086940": { genres: ["Roolipelit", "Strategia", "Seikkailu"], isCoop: true, shortDesc: "Vuoden peli D&D-universumissa uskomattomalla vapaudella ja 4 pelaajan yhteistyöllä.", shortDescEn: "Game of the Year set in the D&D universe with unmatched freedom and 4-player co-op." }, // Baldur's Gate 3
-  "252490": { genres: ["Toiminta", "Selviytyminen", "Hiekkalaatikko"], isCoop: true, shortDesc: "Armoton moninpeliselviytyminen avoimessa maailmassa.", shortDescEn: "Ruthless multiplayer open-world survival game." }, // Rust
-  "322330": { genres: ["Selviytyminen", "Seikkailu", "Indie"], isCoop: true, shortDesc: "Vedenalainen selviytymisseikkailu vieraalla valtameriplaneetalla.", shortDescEn: "Underwater survival exploration on an alien ocean planet." }, // Subnautica
-  "892970": { genres: ["Toiminta", "Roolipelit", "Selviytyminen"], isCoop: true, shortDesc: "Viikinkiteemainen proceduraalinen selviytymisseikkailu 1-10 pelaajalle.", shortDescEn: "Viking-themed procedural survival adventure for 1-10 players." }, // Valheim
-  "632360": { genres: ["Toiminta", "Roolipelit", "Roguelike"], isCoop: true, shortDesc: "Nopeatempoinen 3D-roguelike jopa 4 pelaajan verkkomonipelillä.", shortDescEn: "Fast-paced 3D action roguelike with up to 4-player online multiplayer." }, // Risk of Rain 2
-  "322170": { genres: ["Toiminta", "Kauhu", "Seikkailu"], isCoop: true, shortDesc: "Ensimmäisen persoonan parkour-zombitoiminta 4 hengen yhteistyöllä.", shortDescEn: "First-person parkour zombie action with 4-player co-op campaign." }, // Dying Light
-  "582010": { genres: ["Toiminta", "Roolipelit"], isCoop: true, shortDesc: "Eeppisiä hirviöjahteja jättiläisolentoja vastaan yksin tai ryhmässä.", shortDescEn: "Epic monster hunts against colossal beasts solo or in a 4-player hunting party." }, // Monster Hunter: World
-  "552520": { genres: ["Toiminta", "Roolipelit", "Miekka"], isCoop: true, shortDesc: "4 hengen hack-and-slash Warhammer-maailmassa.", shortDescEn: "Visceral 4-player melee action combat set in the Warhammer universe." }, // Vermintide 2
-  "239140": { genres: ["Toiminta", "Ammunta", "Ryöstö"], isCoop: true, shortDesc: "Neljän hengen taktinen pankkiryöstö- ja räiskintäpeli.", shortDescEn: "Four-player tactical heist and shooter game." }, // Payday 2
-  "730": { genres: ["Ammunta", "Toiminta", "FPS"], isCoop: false, shortDesc: "Klassinen kilpailullinen taktinen ensimmäisen persoonan ammunta.", shortDescEn: "Premier competitive tactical first-person shooter." }, // CS2
-  "49520": { genres: ["Toiminta", "Roolipelit", "Ammunta"], isCoop: true, shortDesc: "Ryöstelyä ja räiskintää Pandorassa jopa 4 pelaajan co-opissa.", shortDescEn: "Loot-and-shoot craziness on Pandora for up to 4 co-op players." }, // Borderlands 2
-  "427520": { genres: ["Simulaatio", "Strategia"], isCoop: true, shortDesc: "Rakenna ja automatisoi massiivisia tehtaita yksin tai ystävien kanssa.", shortDescEn: "Build and automate massive factory complexes alone or with friends." }, // Factorio
-  "962130": { genres: ["Selviytyminen", "Toiminta", "Seikkailu"], isCoop: true, shortDesc: "Kutistuneet teinit selviytyvät takapihan hyönteisiä vastaan ryhmässä.", shortDescEn: "Shrunk teens survive against giant backyard insects in co-op." }, // Grounded
-  "648800": { genres: ["Selviytyminen", "Seikkailu", "Moninpeli"], isCoop: true, shortDesc: "Selviytymistä valtamerellä lauttaa laajentaen yhdessä kavereiden kanssa.", shortDescEn: "Ocean survival where you expand your raft together with friends." }, // Raft
-  "242760": { genres: ["Kauhu", "Selviytyminen", "Toiminta"], isCoop: true, shortDesc: "Selviytymiskauhua kannibaalien asuttamalla saarella kavereiden kanssa.", shortDescEn: "Survival horror in a cannibal-infested peninsula with friends." }, // The Forest
-  "739630": { genres: ["Kauhu", "VR", "Yhteistyö"], isCoop: true, shortDesc: "4 pelaajan psykologinen aavejahti ja haamututkimus.", shortDescEn: "4-player psychological ghost hunting and paranormal investigation." }, // Phasmophobia
-  "381210": { genres: ["Kauhu", "Moninpeli", "Toiminta"], isCoop: true, shortDesc: "4vs1 epäsymmetrinen kauhuselviytymismoninpeli.", shortDescEn: "4v1 asymmetrical multiplayer horror survival game." }, // Dead by Daylight
-  "1426210": { genres: ["Toiminta", "Seikkailu", "Tasohyppely"], isCoop: true, shortDesc: "Palkittu kahden pelaajan yhteistyöhelmi parisuhteen korjaamisesta.", shortDescEn: "Award-winning pure co-op platform adventure about healing a relationship." }, // It Takes Two
-  "728880": { genres: ["Toiminta", "Moninpeli", "Party"], isCoop: true, shortDesc: "Haahtava ja kaoottinen ruoanlaittopeli 1-4 kokille.", shortDescEn: "Chaotic and hilarious culinary co-op game for 1-4 chefs." }, // Overcooked! 2
+  "550": { genres: ["Toiminta", "Ammunta", "Kauhu"], isCoop: true, shortDesc: "Klassinen 4 pelaajan zombiselviytymispeli verkkoyhteistyöllä.", shortDescEn: "Classic 4-player online co-op zombie survival FPS." }, // Left 4 Dead 2
+  "620": { genres: ["Pulmapelit", "Seikkailu", "Toiminta"], isCoop: true, shortDesc: "Nerokas fysiikkapohjainen pulmapeli erillisellä 2 pelaajan verkkoyhteistyökampanjalla.", shortDescEn: "Ingenious physics puzzle game with dedicated 2-player online co-op campaign." }, // Portal 2
+  "105600": { genres: ["Toiminta", "Seikkailu", "Roolipelit", "Hiekkalaatikko"], isCoop: true, shortDesc: "2D-hiekkalaatikkoseikkailu, jossa kaivetaan, taistellaan ja rakennetaan verkkoyhteistyössä.", shortDescEn: "2D sandbox adventure where you dig, fight, and build together in online co-op." }, // Terraria
+  "413150": { genres: ["Roolipelit", "Simulaatio", "Indie"], isCoop: true, shortDesc: "Rentouttava maanviljely- ja elämäsimulaattori jopa neljälle pelaajalle verkkoyhteistyössä.", shortDescEn: "Relaxing farming and country-life simulator for up to 4 players in online co-op." }, // Stardew Valley
+  "548430": { genres: ["Toiminta", "Ammunta", "Avaruus"], isCoop: true, shortDesc: "1-4 hengen kaivos- ja räiskintäseikkailu verkkoyhteistyössä proseduraalisissa luolissa.", shortDescEn: "1-4 player online co-op mining and shooter adventure in procedural caves." }, // Deep Rock Galactic
+  "219990": { genres: ["Roolipelit", "Toiminta", "Hack and Slash"], isCoop: true, shortDesc: "Synkkä toimintaroolipeli monipuolisella hahmonkehityksellä ja verkkoyhteistyöllä.", shortDescEn: "Dark action RPG featuring complex character development and online co-op." }, // Grim Dawn
+  "289070": { genres: ["Strategia", "Vuoropohjainen"], isCoop: false, shortDesc: "Vuoropohjainen sivilisaationrakennusstrategia moninpelitilalla (ei verkkoyhteistyöpeli).", shortDescEn: "Turn-based 4X civilization strategy with competitive multiplayer (not co-op)." }, // Civ VI
+  "3900": { genres: ["Strategia", "Vuoropohjainen"], isCoop: false, shortDesc: "Legendaarinen vuoropohjainen strategiaklassikko moninpelillä.", shortDescEn: "Legendary turn-based strategy classic with multiplayer." }, // Civ IV
+  "435150": { genres: ["Roolipelit", "Strategia", "Vuoropohjainen"], isCoop: true, shortDesc: "Kriitikoiden ylistämä vuoropohjainen taktinen roolipeli 4 pelaajan verkkoyhteistyöllä.", shortDescEn: "Critically acclaimed tactical RPG with 4-player online co-op campaign." }, // Divinity Original Sin 2
+  "1086940": { genres: ["Roolipelit", "Strategia", "Seikkailu"], isCoop: true, shortDesc: "Vuoden peli D&D-universumissa uskomattomalla vapaudella ja 4 pelaajan verkkoyhteistyöllä.", shortDescEn: "Game of the Year in D&D universe with 4-player online co-op." }, // Baldur's Gate 3
+  "252490": { genres: ["Toiminta", "Selviytyminen", "Hiekkalaatikko"], isCoop: false, shortDesc: "Armoton PvP-moninpeliselviytyminen avoimessa maailmassa.", shortDescEn: "Ruthless PvP multiplayer open-world survival game." }, // Rust
+  "322330": { genres: ["Selviytyminen", "Seikkailu", "Indie"], isCoop: false, shortDesc: "Vedenalainen yksinpeliselviytymisseikkailu vieraalla valtameriplaneetalla.", shortDescEn: "Single-player underwater survival exploration on an alien ocean planet." }, // Subnautica
+  "892970": { genres: ["Toiminta", "Roolipelit", "Selviytyminen"], isCoop: true, shortDesc: "Viikinkiteemainen proceduuraalinen selviytymisseikkailu 1-10 hengen verkkoyhteistyössä.", shortDescEn: "Viking-themed procedural survival adventure with online co-op." }, // Valheim
+  "632360": { genres: ["Toiminta", "Roolipelit", "Roguelike"], isCoop: true, shortDesc: "Nopeatempoinen 3D-roguelike jopa 4 pelaajan verkkoyhteistyöllä.", shortDescEn: "Fast-paced 3D action roguelike with up to 4-player online co-op." }, // Risk of Rain 2
+  "322170": { genres: ["Toiminta", "Kauhu", "Seikkailu"], isCoop: true, shortDesc: "Ensimmäisen persoonan parkour-zombitoiminta 4 hengen verkkoyhteistyöllä.", shortDescEn: "First-person parkour zombie action with 4-player online co-op." }, // Dying Light
+  "582010": { genres: ["Toiminta", "Roolipelit"], isCoop: true, shortDesc: "Eeppisiä hirviöjahteja jättiläisolentoja vastaan 4 pelaajan verkkoryhmässä.", shortDescEn: "Epic monster hunts in a 4-player online co-op party." }, // Monster Hunter: World
+  "552520": { genres: ["Toiminta", "Roolipelit", "Miekka"], isCoop: true, shortDesc: "4 hengen verkkoyhteistyö-hack-and-slash Warhammer-maailmassa.", shortDescEn: "Visceral 4-player online co-op melee combat in Warhammer universe." }, // Vermintide 2
+  "239140": { genres: ["Toiminta", "Ammunta", "Ryöstö"], isCoop: true, shortDesc: "Neljän hengen taktinen verkkoyhteistyö-ryöstöpeli.", shortDescEn: "Four-player tactical online co-op heist shooter." }, // Payday 2
+  "730": { genres: ["Ammunta", "Toiminta", "FPS"], isCoop: false, shortDesc: "Klassinen kilpailullinen taktinen ensimmäisen persoonan ammunta (PvP).", shortDescEn: "Premier competitive tactical first-person shooter (PvP)." }, // CS2
+  "49520": { genres: ["Toiminta", "Roolipelit", "Ammunta"], isCoop: true, shortDesc: "Ryöstelyä ja räiskintää jopa 4 pelaajan verkkoyhteistyössä.", shortDescEn: "Loot-and-shoot craziness for up to 4 online co-op players." }, // Borderlands 2
+  "427520": { genres: ["Simulaatio", "Strategia"], isCoop: true, shortDesc: "Rakenna ja automatisoi massiivisia tehtaita verkkoyhteistyössä.", shortDescEn: "Build and automate massive factory complexes in online co-op." }, // Factorio
+  "962130": { genres: ["Selviytyminen", "Toiminta", "Seikkailu"], isCoop: true, shortDesc: "Kutistuneet teinit selviytyvät takapihan hyönteisiä vastaan verkkoyhteistyössä.", shortDescEn: "Shrunk teens survive giant backyard insects in online co-op." }, // Grounded
+  "648800": { genres: ["Selviytyminen", "Seikkailu", "Moninpeli"], isCoop: true, shortDesc: "Selviytymistä valtamerellä lauttaa laajentaen verkkoyhteistyössä.", shortDescEn: "Ocean survival expanding your raft in online co-op." }, // Raft
+  "242760": { genres: ["Kauhu", "Selviytyminen", "Toiminta"], isCoop: true, shortDesc: "Selviytymiskauhua kannibaalisaarella verkkoyhteistyössä kavereiden kanssa.", shortDescEn: "Survival horror in a cannibal-infested peninsula with online co-op." }, // The Forest
+  "739630": { genres: ["Kauhu", "VR", "Yhteistyö"], isCoop: true, shortDesc: "4 pelaajan psykologinen haamututkimus verkkoyhteistyössä.", shortDescEn: "4-player psychological ghost hunting in online co-op." }, // Phasmophobia
+  "381210": { genres: ["Kauhu", "Moninpeli", "Toiminta"], isCoop: false, shortDesc: "4vs1 epäsymmetrinen PvP-kauhuselviytymismoninpeli.", shortDescEn: "4v1 asymmetrical PvP multiplayer horror survival game." }, // Dead by Daylight
+  "1426210": { genres: ["Toiminta", "Seikkailu", "Tasohyppely"], isCoop: true, shortDesc: "Palkittu 2 pelaajan puhdas verkkoyhteistyöhelmi.", shortDescEn: "Award-winning pure 2-player online co-op platform adventure." }, // It Takes Two
+  "728880": { genres: ["Toiminta", "Moninpeli", "Party"], isCoop: true, shortDesc: "Kaoottinen ruoanlaittopeli 1-4 kokille verkkoyhteistyössä.", shortDescEn: "Chaotic culinary co-op game for 1-4 chefs with online play." }, // Overcooked! 2
   "1172470": { genres: ["Roolipelit", "Toiminta", "Ammunta"], isCoop: false, shortDesc: "Tulevaisuuden synkkä megakaupunki täynnä kyberneettisiä tehtäviä.", shortDescEn: "Open-world dystopian action RPG set in the vibrant megacity of Night City." }, // Cyberpunk 2077
   "292030": { genres: ["Roolipelit", "Seikkailu", "Avoimen maailman"], isCoop: false, shortDesc: "Kriitikoiden ylistämä fantasiaroolipeli Geralt Rivialaisen matkasta.", shortDescEn: "Critically acclaimed story-driven dark fantasy RPG featuring monster slayer Geralt." }, // Witcher 3
   "1145360": { genres: ["Toiminta", "Roguelike", "Indie"], isCoop: false, shortDesc: "Kreikkalaiseen mytologiaan sijoittuva vauhdikas roguelike-mestariteos.", shortDescEn: "God-like rogue-like dungeon crawler set in Greek mythology." }, // Hades
@@ -52,8 +52,8 @@ export const KNOWN_GAMES: Record<string, KnownGameMeta> = {
   "753640": { genres: ["Seikkailu", "Avaruus", "Mysteeri"], isCoop: false, shortDesc: "Mullistava aurinkokunnan tutkimusmatka 22 minuutin aikasilmukassa.", shortDescEn: "Masterful solar system space exploration caught in a 22-minute time loop." }, // Outer Wilds
   "883710": { genres: ["Toiminta", "Ammunta", "Kauhu"], isCoop: false, shortDesc: "Kiehtova ja brutaali scifi-selviytyminen zombien riivaamassa kaupungissa.", shortDescEn: "Stunning survival horror reimagining set in the zombie-infested Raccoon City." }, // Resident Evil 2
   "367520": { genres: ["Tasohyppely", "Seikkailu", "Metroidvania"], isCoop: false, shortDesc: "Häikäisevän kaunis ja koskettava tasohyppelyseikkailu.", shortDescEn: "Breathtakingly beautiful emotional platform adventure." }, // Hollow Knight / Ori
-  "2050650": { genres: ["Toiminta", "Ammunta", "Avaruus"], isCoop: true, shortDesc: "Demokratian levittämistä galaksin ympäri neljän pelaajan tiimissä.", shortDescEn: "Galactic 4-player co-op squad shooter fighting for Managed Democracy." }, // Helldivers 2
-  "553850": { genres: ["Toiminta", "Ammunta", "Avaruus"], isCoop: true, shortDesc: "Taktinen neljän pelaajan scifiräiskintä.", shortDescEn: "Top-down tactical 4-player shooter." }, // Helldivers 1
+  "2050650": { genres: ["Toiminta", "Kauhu", "Ammunta"], isCoop: false, shortDesc: "Selviytymiskauhun mestariteoksen huippuunsa hiottu moderni uudelleenversio.", shortDescEn: "Survival horror masterpiece reimagined with modern gameplay and visuals." }, // Resident Evil 4 (2023)
+  "553850": { genres: ["Toiminta", "Ammunta", "Avaruus"], isCoop: true, shortDesc: "Demokratian levittämistä galaksin ympäri neljän pelaajan verkkotiimissä.", shortDescEn: "Galactic 4-player online co-op squad shooter fighting for Managed Democracy." }, // Helldivers
   "223730": { genres: ["Tasohyppely", "Indie", "Pulmapelit"], isCoop: false, shortDesc: "Värikäs ja sulava fysiikkapohjainen pulmatasohyppely.", shortDescEn: "Charming physics-based puzzle platformer." },
   "45760": { genres: ["Taistelu", "Toiminta", "Moninpeli"], isCoop: false, shortDesc: "Klassinen ja tekninen kamppailupelilegenda.", shortDescEn: "Classic deep competitive 2D fighting game legend." }, // Ultra Street Fighter IV
   "389730": { genres: ["Taistelu", "Toiminta", "Moninpeli"], isCoop: false, shortDesc: "Visuaalisesti vaikuttava 3D-taistelupeliklassikko.", shortDescEn: "Visually spectacular 3D fighting game benchmark." }, // TEKKEN 7
@@ -109,8 +109,8 @@ export const KNOWN_RELEASE_YEARS: Record<string, number> = {
   "753640": 2019, // Outer Wilds
   "883710": 2019, // Resident Evil 2
   "367520": 2015, // Ori
-  "2050650": 2024, // Helldivers 2
-  "553850": 2015, // Helldivers 1
+  "2050650": 2023, // Resident Evil 4 Remake
+  "553850": 2024, // Helldivers 2
   "223730": 2013,
   "45760": 2009, // Ultra Street Fighter IV
   "389730": 2017, // TEKKEN 7
@@ -187,33 +187,61 @@ export function inferGenres(title: string, rawGenres?: string[]): string[] {
   return Array.from(genres);
 }
 
-// Helper to check if a game supports online co-op
+// Helper to check if a game specifically supports online co-op (verkkoyhteistyö)
 export function checkIsCoop(appId: string, title: string, steamCategories?: string[]): boolean {
-  if (KNOWN_GAMES[appId]?.isCoop) return true;
+  // 1. Explicit override in verified known games registry
+  if (KNOWN_GAMES[appId] !== undefined) {
+    return KNOWN_GAMES[appId].isCoop;
+  }
   
-  if (steamCategories && Array.isArray(steamCategories)) {
-    const isCoopCategory = steamCategories.some((c) => {
-      const lower = c.toLowerCase();
-      return lower.includes("yhteistyö") || lower.includes("co-op") || lower.includes("coop");
+  // 2. If official Steam categories are provided, check strictly for Online Co-op (Verkkoyhteistyö)
+  if (steamCategories && Array.isArray(steamCategories) && steamCategories.length > 0) {
+    const isOnlineCoop = steamCategories.some((c) => {
+      const lower = c.toLowerCase().trim();
+      return (
+        lower === "online co-op" ||
+        lower === "verkkoyhteistyö" ||
+        lower.includes("online co-op") ||
+        lower.includes("verkkoyhteistyö") ||
+        lower.includes("online coop")
+      );
     });
-    if (isCoopCategory) return true;
+    // Steam category list is authoritative when present
+    return isOnlineCoop;
   }
 
+  // 3. Fallback title checks for verified online co-op titles
   const t = title.toLowerCase();
-  const coopKeywords = [
-    "co-op", "coop", "together", "civilization", "divinity", 
-    "grim dawn", "left 4 dead", "portal 2", "deep rock", "borderlands", 
-    "remnant", "valheim", "darkness ii", "payday", "vermintide", "warhammer", 
-    "don't starve together", "it takes two", "we were here", "raft", 
-    "phasmophobia", "overcooked", "helldivers", "sniper elite", "dying light", 
-    "killing floor", "risk of rain", "unravel two", "trine", "broforce", 
-    "magicka", "castle crashers", "battleblock", "speedrunners", "for the king", 
-    "barotrauma", "terraria", "core keeper", "v rising", "satisfactory", 
-    "factorio", "generation zero", "green hell", "wasteland 3", "alien swarm",
-    "dead by daylight", "sea of thieves", "sons of the forest", "the forest",
-    "monster hunter", "monhun", "stardew valley", "halo", "destiny", "division",
-    "ghost recon", "streets of rage 4", "tmnt", "outriders"
+
+  // Explicitly reject titles that are PvP or single-player or local couch co-op only
+  const nonOnlineCoopPatterns = [
+    "civilization", "dead by daylight", "speedrunners", "rust",
+    "subnautica", "counter-strike", "cs:go", "cs2", "dota",
+    "street fighter", "tekken", "mortal kombat", "guilty gear",
+    "rocket league", "pubg", "apex legends", "rainbow six siege",
+    "lovers in a dangerous", "enter the gungeon", "binding of isaac"
   ];
-  return coopKeywords.some((kw) => t.includes(kw));
+  if (nonOnlineCoopPatterns.some(p => t.includes(p))) {
+    return false;
+  }
+
+  // Verified online co-op titles and franchises
+  const verifiedOnlineCoopTitles = [
+    "left 4 dead", "portal 2", "deep rock galactic", "borderlands",
+    "remnant: from the ashes", "remnant ii", "remnant 2", "valheim",
+    "payday 2", "payday: the heist", "payday 3", "vermintide 2", "darktide",
+    "don't starve together", "it takes two", "we were here", "raft",
+    "phasmophobia", "overcooked! 2", "overcooked 2", "helldivers",
+    "dying light", "killing floor", "risk of rain 2", "unravel two",
+    "barotrauma", "core keeper", "v rising", "satisfactory",
+    "generation zero", "green hell", "wasteland 3", "alien swarm",
+    "sea of thieves", "sons of the forest", "the forest",
+    "monster hunter: world", "monster hunter rise", "monster hunter wilds",
+    "stardew valley", "lethal company", "outriders", "back 4 blood",
+    "sniper elite 4", "sniper elite 5", "warhammer: vermintide", "grounded",
+    "content warning", "palworld", "enshrouded", "factorio", "terraria",
+    "divinity: original sin", "baldur's gate 3"
+  ];
+  return verifiedOnlineCoopTitles.some((kw) => t.includes(kw));
 }
 
